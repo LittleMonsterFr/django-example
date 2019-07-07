@@ -1,0 +1,10 @@
+<h1>{{ place.name }}</h1>
+
+<p>Latitude : {{ place.latitude }}</p>
+<p>Longitude : {{ place.longitude }}</p>
+
+<form action="{% url 'places:delete_place' place.id %}" method="post">
+    {% csrf_token %}
+
+    <input type="submit" name="delete" value="Delete place"/>
+</form>

@@ -1,0 +1,32 @@
+<h1> My places</h1>
+
+<hr>
+
+<form action="{% url 'places:add_place' %}" method="post">
+    {% csrf_token %}
+
+    <label for="name">Name :</label><br>
+    <input type="text" id="name" name="name" placeholder="Place name" value="">
+
+    <br><br>
+    <label for="latitude">Latitude :</label><br>
+    <input type="number" step="any" id="latitude" name="latitude" placeholder="± 000000000.000000" value="">
+    <br><br>
+    <label for="longitude">Longitude :</label><br>
+    <input type="number" step="any" id="longitude" name="longitude" placeholder="± 000000000.000000" value="">
+    <br><br>
+
+    <input type="submit" value="Add">
+</form>
+
+<hr>
+
+{% if place_list %}
+    <ul>
+        {% for place in place_list %}
+            <li><a href="{% url 'places:detail' place.id %}">{{ place.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No Place are available.</p>
+{% endif %}
