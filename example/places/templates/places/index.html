@@ -1,32 +1,69 @@
-<h1> My places</h1>
+{% extends "places/base.html" %}
 
-<hr>
+{% block extrahead %}
+    {{ form.media }}
 
-<form action="{% url 'places:add_place' %}" method="post">
-    {% csrf_token %}
+    <script type="text/javascript">
+        $(document).on("google_point_map_widget:marker_create", function (e, lat, lng, locationInputElem, mapWrapID) {
+            console.log(locationInputElem); // django widget textarea widget (hidden)
+            console.log(lat, lng); // created marker coordinates
+            console.log(mapWrapID); // map widget wrapper element ID
+        });
 
-    <label for="name">Name :</label><br>
-    <input type="text" id="name" name="name" placeholder="Place name" value="">
+        $(document).on("google_point_map_widget:marker_change", function (e, lat, lng, locationInputElem, mapWrapID) {
+            console.log(locationInputElem); // django widget textarea widget (hidden)
+            console.log(lat, lng);  // changed marker coordinates
+            console.log(mapWrapID); // map widget wrapper element ID
+        });
 
-    <br><br>
-    <label for="latitude">Latitude :</label><br>
-    <input type="number" step="any" id="latitude" name="latitude" placeholder="± 000000000.000000" value="">
-    <br><br>
-    <label for="longitude">Longitude :</label><br>
-    <input type="number" step="any" id="longitude" name="longitude" placeholder="± 000000000.000000" value="">
-    <br><br>
+        $(document).on("google_point_map_widget:marker_delete", function (e, lat, lng, locationInputElem, mapWrapID) {
+            console.log(locationInputElem); // django widget textarea widget (hidden)
+            console.log(lat, lng);  // deleted marker coordinates
+            console.log(mapWrapID); // map widget wrapper element ID
+        })
+    </script>
+{% endblock extrahead %}
 
-    <input type="submit" value="Add">
-</form>
+{% block content %}
 
-<hr>
+    <h1> My places</h1>
 
-{% if place_list %}
-    <ul>
-        {% for place in place_list %}
-            <li><a href="{% url 'places:detail' place.id %}">{{ place.name }}</a></li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No Place are available.</p>
-{% endif %}
+    <hr>
+
+    <form action="{% url 'places:add_place' %}" method="post">
+        {% csrf_token %}
+
+        <label for="name">Name :</label><br>
+        <input type="text" id="name" name="name" placeholder="Place name" value="">
+
+        <br><br>
+        <label for="latitude">Latitude :</label><br>
+        <input type="number" step="any" id="latitude" name="latitude" placeholder="± 000000000.000000" value="">
+        <br><br>
+        <label for="longitude">Longitude :</label><br>
+        <input type="number" step="any" id="longitude" name="longitude" placeholder="± 000000000.000000" value="">
+        <br><br>
+
+        <input type="submit" value="Add">
+    </form>
+
+    <hr>
+
+    {% if place_list %}
+        <ul>
+            {% for place in place_list %}
+                <li><a href="{% url 'places:detail' place.id %}">{{ place.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No Place are available.</p>
+    {% endif %}
+
+    <hr>
+
+    <form method="post" >
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+{% endblock content %}
